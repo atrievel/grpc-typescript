@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package songs;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+enum Category {
+    OTHER = 0;
+    GROCERY = 1;
+    BOOK = 2;
+    BED = 3;
+    COSMETICS = 4;
+    FURNITURE = 5;
+    APPLIANCE = 6;
+    CLOTHING = 7;
+    OUTDOORS = 8;
+    PHARMACY = 9;
+}
+
+message Product {
+    string upc = 1;
+    string name = 2;
+    float price = 3;
+    bool is_active = 4;
+    Category category = 5;
+}
+
+message Transaction {
+    string id = 1;
+    google.protobuf.Timestamp date = 2;
+    repeated Product products = 3;
+}
+
+message TransactionId {
+    string id = 1;
+}
+
+service Transactions {
+    rpc SuggestRandomProduct(google.protobuf.Empty) returns (Product) {};
+    rpc GetTransaction(TransactionId) returns (Transaction) {};
+    rpc AddTransaction(stream Transaction) returns (google.protobuf.Empty) {};
+    rpc GetAllTransactionsWithProduct(stream Product) returns (stream Transaction) {};
+}
